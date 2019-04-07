@@ -1,5 +1,5 @@
 ## Start zookeeper
-
+zookeeper-server-start.sh ./config/zookeeper.properties
 
 ## Start kafka broker
 kafka-server-start.sh config/server.properties
@@ -98,3 +98,7 @@ Note -> use negative to move back; also does it for each partition (if 3 partiti
 
 ## Consumer with keys
 kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning --property print.key=true --property key.separator=,
+
+___
+
+kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-third-application
