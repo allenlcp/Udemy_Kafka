@@ -81,6 +81,40 @@ Producers can choose to receive acknowledgement of data writes:
 ![ProducersAndKeys](resources/images/img_0003.png)
 
 
+## Consumers
+- Consumers read data from a topic (identified by name)
+- Consumers know which broker to read from
+- In case of broker failures, consumers know how to recover
+- Data is read in order within each partitions
+- Consumer read in order
+
+![Consumers](resources/images/img_0004.png)
+
+- Consumer can read from multiple par partitions (at a high level the consumer is reading them in parallel, in the implementation side of things - the consumer will actually read a little bit of one partition (e.g 1) and then a little bit from another partition (e.g 2) and etc...)  There is no specific order guaranteed..
+
+## Consumer Groups
+- Consumers read data in consumer groups
+- Each consumer within a group reads from exclusive partitions
+
+![Consumers](resources/images/img_0005.png)
+
+## Consumer Groups (too many consumers)
+- If you have more consumers than partitions, some consumers will be inactive
+- Sometimes we will want that (e.g if Consumer 3 dies, consumer 4 will takes its place)
+- But in general we should have as many partitions as consumers
+
+![Consumers_inactive](resources/images/img_0006.png)
+
+
+## Consumer Offsets
+- Kafka stores the offsets at which a consumer group has been reading
+- The offsets committed live in a Kafka topic names __consumer__offsets
+- When a consumer in a group has processed data received from Kafka, it should be committing the offsets
+- If a consumer dies, it will be able to read back from where if left off thanks to the committed consumer offsets!
+
+
+
+
 ## Start zookeeper
 zookeeper-server-start.sh ./config/zookeeper.properties
 
