@@ -159,14 +159,14 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 - As long as the number of partitions remains constant for a topic (no new partitions), the same key will always go to the same partition
 
 
-## Summary
+### Summary
 <img width="700" alt="Broker_Discovery" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0008.png">
 
 ___
 
-# Kafka admin
+# Kafka admin CLI
 
-## Start zookeeper
+### Start zookeeper
 ``` bash
 zookeeper-server-start.sh ./config/zookeeper.properties
 ```
