@@ -1,4 +1,4 @@
-![Topics, partitions and offsets](resources/images/img_0001.png)
+<img width="500" alt="Topics, partitions and offsets" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0001.png">
 
 ## Topics
 Is a particular stream of data
