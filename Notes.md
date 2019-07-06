@@ -165,44 +165,70 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 ___
 
 ## Start zookeeper
+``` bash
 zookeeper-server-start.sh ./config/zookeeper.properties
+```
 
 ## Start kafka broker
+``` bash
 kafka-server-start.sh config/server.properties
+```
 
 ## Create topics
+``` bash
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3 --replication-factor 1
 
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --create --partitions 6 --replication-factor 1
+```
 
 > **--replication-factor cannot be greater than number of brokers**
 
 ## List of topics 
+``` bash
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --list
+```
 
 ## Topic details
+``` bash
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic first_topic --describe
+```
 
+- Leader is "broker 0"
+- Replicas is "broker 0"
+- Isr is "broker 0"
+<img width="500" alt="Broker_Discovery" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0009.png">
+
+``` bash
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --describe
+```
 
 ## Delete topics
+``` bash
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --delete
+```
+- By default, delete.topic.enable is set to true
 
 ## Producer (default props)
+``` bash
 kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic
+```
 
 ## Producer (custom props)
+``` bash
 kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic --producer-property acks=all
+```
 
 ## Producer (write to non existing topic -> will be created on the fly)
+``` bash
 kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic new_topic
 
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --list
 
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic new_topic --describe
-Creates topic with Partition qty of 1 and Replication factor qty of 1
+```
 
-Best practice - always create topic beforehand
+**Default** - creates topic with Partition qty of 1 and Replication factor qty of 1
+**Best practice** - always create topic beforehand
 
 However we can also update default config in "server.properties" file
 ``` bash
@@ -219,51 +245,71 @@ num.partitions=3
 ...
 ```
 
-kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic new_topic_2 --describe
-kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic new_topic_2
-
 ## Producer with keys
+``` bash
 kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic --property parse.key=true --property key.separator=,
+```
 > key,value
 > another key,another value
 
 
 ## Consumer
-Command only intercepts msg as from launch - won't retrieve missed msg
+- Command only intercepts msg as from launch - won't retrieve missed msg
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic 
+```
 
 ## Consumer (read from beginning)
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning
+```
 
 ## Consumer Same Group
 Console 1
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+```
 Console 2
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+```
 Console 3
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+```
 
 ## Consumer Different Group
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-second-application --from-beginning
+```
 
 ## Groups
+``` bash
 kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list
+```
 When use consumer and don't specify groups -> it generates a random one
 
+``` bash
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-second-application
 
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-first-application
+```
 
 ## Resetting Offsets
+``` bash
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --to-earliest --execute --topic first_topic
 
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --shift-by -2 --execute --topic first_topic
+```
 
 Note -> use negative to move back; also does it for each partition (if 3 partition x 2 => consumer will receive 6 msg)
 
 ## Consumer with keys
+``` bash
 kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning --property print.key=true --property key.separator=,
+```
 
 ___
-
+``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-third-application
+```
