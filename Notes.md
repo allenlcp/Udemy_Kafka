@@ -62,7 +62,7 @@ Example: Topic-A with 2 partitions and replication factor of 2 (2 copies)
 - Producers automatically know to which broker and partition to write to
 - In case of Broker failures, Producers will automatically recover
 
-![Producers](resources/images/img_0002.png)
+<img width="500" alt="Producers" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0002.png">
 
 
 ## Producers and acknowledgement
@@ -78,7 +78,7 @@ Producers can choose to receive acknowledgement of data writes:
 - If a key is sent, then all messages for that key will always go to the same partition
 - A key is basically sent if you need message ordering for a specific field
 
-![ProducersAndKeys](resources/images/img_0003.png)
+<img width="500" alt="ProducersAndKeys" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0003.png">
 
 
 ## Consumers
@@ -88,7 +88,8 @@ Producers can choose to receive acknowledgement of data writes:
 - Data is read in order within each partitions
 - Consumer read in order
 
-![Consumers](resources/images/img_0004.png)
+<img width="500" alt="Consumers" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0004.png">
+
 
 - Consumer can read from multiple par partitions (at a high level the consumer is reading them in parallel, in the implementation side of things - the consumer will actually read a little bit of one partition (e.g 1) and then a little bit from another partition (e.g 2) and etc...)  There is no specific order guaranteed..
 
@@ -96,14 +97,14 @@ Producers can choose to receive acknowledgement of data writes:
 - Consumers read data in consumer groups
 - Each consumer within a group reads from exclusive partitions
 
-![Consumers](resources/images/img_0005.png)
+<img width="500" alt="ConsumerGroups" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0005.png">
 
 ## Consumer Groups (too many consumers)
 - If you have more consumers than partitions, some consumers will be inactive
 - Sometimes we will want that (e.g if Consumer 3 dies, consumer 4 will takes its place)
 - But in general we should have as many partitions as consumers
 
-![Consumers_inactive](resources/images/img_0006.png)
+<img width="500" alt="TooManyConsumers" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0006.png">
 
 
 ## Consumer Offsets
