@@ -1,3 +1,41 @@
+![Topics, partitions and offsets](resources/images/img_0001.png)
+
+## Topics
+Is a particular stream of data
+- Similar to a table in a database (without all the constraints)
+- You can have as many topics as you want
+- A topic is identified by its name
+
+
+## Topics are split by Partitions
+- Each partition is ordered
+- Each message within a partition gets an incremental id, called offset
+
+
+## Offsets
+- Offset only have a meaning for a specific partition (e.g offset 3 in partition 0 doesn't represent the same data as offset 3 in partition 1)
+- Order only guaranteed only within a partition (not across partitions)
+- Data is kept only for a limited time (default in one week)
+- Once the data is written to a partition, it can't be changed (immutability)
+- Data is assigned randomly to a partition unless a key is provided 
+
+
+## Leader for a Partition
+- At any time only ONE broker can be a leader for a given partition
+- Only that leader can receive and serve data for a partition
+- The other brokers will sync the data
+- Therefore each partition has one leader and multiple ISR (in-sync replica)
+
+
+## Replication
+- Topic replication factor > 1 (usually between 2 and 3)
+
+
+## Producer and msg keys
+
+
+
+
 ## Start zookeeper
 zookeeper-server-start.sh ./config/zookeeper.properties
 
