@@ -333,4 +333,13 @@ kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic 
 
 ___
 
+https://github.com/edenhill/kafkacat
+https://medium.com/@coderunner/debugging-with-kafkacat-df7851d21968
+
+___
+
+# 3.0 Kafka Java Programming
+
+
+
 
