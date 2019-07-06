@@ -264,6 +264,7 @@ kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic
 ``` bash
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning
 ```
+- However does not come in the order sent because of different partitions in the topic
 
 ## Consumer Same Group
 Console 1
@@ -284,11 +285,14 @@ kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic 
 kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-second-application --from-beginning
 ```
 
-## Groups
+- If **--from-beginning** is used for a specific group, only the first consumer will receive all the msg, the second consumer in the same group will start where the offset was last committed by the first consumer
+
+
+## Consumer Groups
 ``` bash
 kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list
 ```
-When use consumer and don't specify groups -> it generates a random one
+- When use consumer and don't specify groups -> it generates a random one
 
 ``` bash
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-second-application
@@ -298,12 +302,14 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my
 
 ## Resetting Offsets
 ``` bash
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --to-earliest --execute --topic first_topic
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-second-application --reset-offsets --to-earliest --execute --topic first_topic
 
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --shift-by -2 --execute --topic first_topic
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-second-application --reset-offsets --shift-by -2 --execute --topic first_topic
 ```
+> --shift-by -2 (negative means move back by 2)
+> --shift-by 2 (positive means move forward by 2)
+> **IMPORTANT** - command (--shift-by) will be applied to all partitions in the topic (e.g if there are 3 partitions and we shift by -2, there will be 6 (3 partitions * 2 offsets) messages consumed)
 
-Note -> use negative to move back; also does it for each partition (if 3 partition x 2 => consumer will receive 6 msg)
 
 ## Consumer with keys
 ``` bash
