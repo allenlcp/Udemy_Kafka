@@ -1,3 +1,6 @@
 [submodule "kafka-beginners-course"]
 	path = kafka-beginners-course
 	url = https://github.com/simplesteph/kafka-beginners-course.git
+[submodule "kafka-manager"]
+	path = kafka-manager
+	url = git@github.com:yahoo/kafka-manager.git
