@@ -20,10 +20,6 @@ public class ConsumerDemoWithThread {
         new ConsumerDemoWithThread().run();
     }
 
-    private ConsumerDemoWithThread() {
-
-    }
-
     private void run() {
         Logger logger = LoggerFactory.getLogger(ConsumerDemoWithThread.class.getName());
 
@@ -101,8 +97,7 @@ public class ConsumerDemoWithThread {
             // poll for new data
             try {
                 while (true) {
-                    ConsumerRecords<String, String> records =
-                            consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
 
                     for (ConsumerRecord<String, String> record : records) {
                         logger.info("Key: " + record.key() + ", Value: " + record.value());

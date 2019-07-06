@@ -36,7 +36,7 @@ public class ConsumerDemoAssignSeek {
 
         // assign
         TopicPartition partitionToReadFrom = new TopicPartition(topic, 0);
-        long offsetToReadFrom = 15L;
+        long offsetToReadFrom = 5L;
         consumer.assign(Arrays.asList(partitionToReadFrom));
 
         // seek
@@ -48,8 +48,7 @@ public class ConsumerDemoAssignSeek {
 
         // poll for new data
         while(keepOnReading){
-            ConsumerRecords<String, String> records =
-                    consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
 
             for (ConsumerRecord<String, String> record : records){
                 numberOfMessagesReadSoFar += 1;

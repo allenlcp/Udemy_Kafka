@@ -29,12 +29,11 @@ public class ProducerDemoKeys {
         for (int i=0; i<10; i++ ) {
             // create a producer record
 
-            String topic = "first_topic";
-            String value = "hello world " + Integer.toString(i);
-            String key = "id_" + Integer.toString(i);
+            String topic = "second_topic";
+            String value = "second_value " + i;
+            String key = "id_" + i;
 
-            ProducerRecord<String, String> record =
-                    new ProducerRecord<String, String>(topic, key, value);
+            ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, key, value);
 
             logger.info("Key: " + key); // log the key
             // id_0 is going to partition 1
@@ -50,19 +49,17 @@ public class ProducerDemoKeys {
 
 
             // send data - asynchronous
-            producer.send(record, new Callback() {
-                public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                    // executes every time a record is successfully sent or an exception is thrown
-                    if (e == null) {
-                        // the record was successfully sent
-                        logger.info("Received new metadata. \n" +
-                                "Topic:" + recordMetadata.topic() + "\n" +
-                                "Partition: " + recordMetadata.partition() + "\n" +
-                                "Offset: " + recordMetadata.offset() + "\n" +
-                                "Timestamp: " + recordMetadata.timestamp());
-                    } else {
-                        logger.error("Error while producing", e);
-                    }
+            producer.send(record, (recordMetadata, e) -> {
+                // executes every time a record is successfully sent or an exception is thrown
+                if (e == null) {
+                    // the record was successfully sent
+                    logger.info("Received new metadata. \n" +
+                            "Topic:" + recordMetadata.topic() + "\n" +
+                            "Partition: " + recordMetadata.partition() + "\n" +
+                            "Offset: " + recordMetadata.offset() + "\n" +
+                            "Timestamp: " + recordMetadata.timestamp());
+                } else {
+                    logger.error("Error while producing", e);
                 }
             }).get(); // block the .send() to make it synchronous - don't do this in production!
         }
