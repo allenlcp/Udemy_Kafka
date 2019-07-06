@@ -113,6 +113,20 @@ Producers can choose to receive acknowledgement of data writes:
 - If a consumer dies, it will be able to read back from where if left off thanks to the committed consumer offsets!
 
 
+## Delivery semantics for consumers
+Consumer choose when to commit offsets and there are 3 delivery semantics:
+> **At most once: (not preferred)** 
+> * offsets are committed as soon as the message is received
+> * if the processing goes wrong, the message will be list (it won't be read again)
+
+> **At least once: (usually preferred)** 
+> * offsets are committed after the message is processed
+> * if the processing goes wrong, the message will be read again
+> * this can result in duplicate processing of messages. Make sure your processing is **idempotent** (i.e processing again the message won't impact your systems)
+
+> **Exactly once** 
+> * can be achieved for Kafka => Kafka workflows using Kafka Stream API
+> * For Kafka => External System workflows, use an idempotent consumer
 
 
 ## Start zookeeper
