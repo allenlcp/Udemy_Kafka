@@ -228,6 +228,7 @@ kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic new_topic --describe
 ```
 
 **Default** - creates topic with Partition qty of 1 and Replication factor qty of 1
+
 **Best practice** - always create topic beforehand
 
 However we can also update default config in "server.properties" file
