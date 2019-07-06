@@ -164,6 +164,8 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 
 ___
 
+# Kafka admin
+
 ## Start zookeeper
 ``` bash
 zookeeper-server-start.sh ./config/zookeeper.properties
@@ -208,6 +210,10 @@ kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --delete
 ```
 - By default, delete.topic.enable is set to true
 
+___ 
+
+# Producer/ Consumer - Message without keys
+
 ## Producer (default props)
 ``` bash
 kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic
@@ -245,14 +251,7 @@ num.partitions=3
 # The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
 ...
 ```
-
-## Producer with keys
-``` bash
-kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic --property parse.key=true --property key.separator=,
-```
-> key,value
-> another key,another value
-
+___
 
 ## Consumer
 - Command only intercepts msg as from launch - won't retrieve missed msg
@@ -307,16 +306,27 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-second-app
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-second-application --reset-offsets --shift-by -2 --execute --topic first_topic
 ```
 > --shift-by -2 (negative means move back by 2)
+
 > --shift-by 2 (positive means move forward by 2)
+
 > **IMPORTANT** - command (--shift-by) will be applied to all partitions in the topic (e.g if there are 3 partitions and we shift by -2, there will be 6 (3 partitions * 2 offsets) messages consumed)
 
+___
+
+
+# Message with keys
+## Producer with keys
+``` bash
+kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic --property parse.key=true --property key.separator=,
+```
+> key,value
+> another key,another value
 
 ## Consumer with keys
 ``` bash
-kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning --property print.key=true --property key.separator=,
+kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-second-application --from-beginning --property print.key=true --property key.separator=,
 ```
 
 ___
-``` bash
-kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-third-application
-```
+
+
