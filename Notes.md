@@ -162,6 +162,7 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 ## Summary
 <img width="700" alt="Broker_Discovery" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0008.png">
 
+___
 
 ## Start zookeeper
 zookeeper-server-start.sh ./config/zookeeper.properties
@@ -169,13 +170,12 @@ zookeeper-server-start.sh ./config/zookeeper.properties
 ## Start kafka broker
 kafka-server-start.sh config/server.properties
 
-
 ## Create topics
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3 --replication-factor 1
 
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --create --partitions 6 --replication-factor 1
 
---replication-factor cannot be greater than number of brokers
+> **--replication-factor cannot be greater than number of brokers**
 
 ## List of topics 
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --list
