@@ -130,6 +130,39 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 > * For Kafka => External System workflows, use an idempotent consumer
 
 
+## Kafka Broker Discovery
+- Every Kafka broker is called a "bootstrap server"
+- That means that you only need to connect to one broker, and you will be connected to the entire cluster
+- Each broker knows about all brokers, topics and partitions (metadata)
+
+<img width="500" alt="Broker_Discovery" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0007.png">
+
+
+## Zookeeper
+- Zookeeper manages brokers (keeps a list of them)
+- Zookeeper helps in performing leader election for partitions
+- Zookeeper sends notifications to Kafka in case of changes (e.g new topic, broker dies, broker comes up, delete topics, etc...)
+- **Kafka can't work without Zookeeper**
+- Zookeeper by design operates with an **odd** number of servers (3, 5, 7)
+- Zookeeper has a leader (handle writes) the rest of the servers are followers (handle reads)
+- Consumers and producers read and write to kafka (It's Kafka that uses Zookeeper to write to it's metadata)
+- Zookeeper does **NOT** store consumer offsets with Kafka > v0.10
+
+
+## Kafka Guarantees
+- Messages are appended to a topic-partition in the order they are sent
+- Consumers read messages in the order stored in a topic-partition
+- With a replication factor of N, producers and consumers can tolerate up to N-1 brokers being down
+- This is why a replication factor of 3 is a good idea:
+  * Allows for one broker to be taken down for maintenance
+  * Allows for another broker to be taken down unexpectedly
+- As long as the number of partitions remains constant for a topic (no new partitions), the same key will always go to the same partition
+
+
+## Summary
+<img width="700" alt="Broker_Discovery" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0008.png">
+
+
 ## Start zookeeper
 zookeeper-server-start.sh ./config/zookeeper.properties
 
