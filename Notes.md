@@ -1,4 +1,4 @@
-# 1. Kafka Theory
+# 1.0 Kafka Theory
 
 <img width="500" alt="Topics, partitions and offsets" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0001.png">
 
@@ -166,7 +166,7 @@ Consumer choose when to commit offsets and there are 3 delivery semantics:
 
 ___
 
-# 2. Kafka CLI
+# 2.0 Kafka CLI
 
 ## 2.1 Kafka / Zookeeper admin command
 
