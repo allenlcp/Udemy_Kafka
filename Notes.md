@@ -20,6 +20,36 @@ Is a particular stream of data
 - Data is assigned randomly to a partition unless a key is provided 
 
 
+## Brokers
+- A Kafka clusters is composed of multiple brokers (servers)
+- Each broker is identified with its ID (integer)
+- Each broker contains certain topic partitions
+- After connecting to any broker (Called a bootstrap broker), you will be connected to the entire cluster
+- A good number to get started is 3 brokers, but some big clusters have over 100 brokers
+
+
+## Brokers and topics
+Example of Topic-A with 3 partitions and 100 brokers 
+- Broker_101 will have Topic-A/Partition_0
+- Broker_102 will have Topic-A/Partition_1
+- Broker_103 will have Topic-A/Partition_3
+
+Example of Topic-A with 2 partitions and 100 brokers 
+- Broker_101 will have Topic-A/Partition_0
+- Broker_102 will have Topic-A/Partition_1
+
+
+## Replication
+- Topic replication factor > 1 (usually between 2 and 3)
+- This way if a broker is down, another broker can serve the data
+
+Example: Topic-A with 2 partitions and replication factor of 2 (2 copies)
+- Broker_101 will have Topic-A/Partition_0(Leader)
+- Broker_102 will have Topic-A/Partition_0(ISR)
+- Broker_102 will have Topic-A/Partition_1(Leader)
+- Broker_103 will have Topic-A/Partition_1(ISR)
+
+
 ## Leader for a Partition
 - At any time only ONE broker can be a leader for a given partition
 - Only that leader can receive and serve data for a partition
@@ -27,13 +57,28 @@ Is a particular stream of data
 - Therefore each partition has one leader and multiple ISR (in-sync replica)
 
 
-## Replication
-- Topic replication factor > 1 (usually between 2 and 3)
+## Producer
+- Producers write data to topics (which is made of partitions)
+- Producers automatically know to which broker and partition to write to
+- In case of Broker failures, Producers will automatically recover
+
+![Producers](resources/images/img_0002.png)
+
+
+## Producers and acknowledgement
+Producers can choose to receive acknowledgement of data writes:
+- acks=0: Producer won't wait for acknowledgement (possible data loss)
+- acks=1 (default setting): Producer will wait for the leader to acknowledge (limited data loss)
+- acks=all: Leader + replicas acknowledgement (no data loss)
 
 
 ## Producer and msg keys
+- Producers can choose to send a ket with the message (string, number, etc)
+- If key=null, data is sent round robin (broker 101 then 102 then 103.....)
+- If a key is sent, then all messages for that key will always go to the same partition
+- A key is basically sent if you need message ordering for a specific field
 
-
+![ProducersAndKeys](resources/images/img_0003.png)
 
 
 ## Start zookeeper
