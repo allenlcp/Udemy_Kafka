@@ -350,12 +350,28 @@ kafka-server-start.sh config/server.properties
 ## Creating topic
 kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3 --replication-factor 1
 
+kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic second_topic --create --partitions 3 --replication-factor 1
+
+kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic twitter_tweets --create --partitions 6 --replication-factor 1
+
+## Topic details
+kafka-topics.sh --zookeeper 127.0.0.1:2181 --list
+
+kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic first_topic --describe
+
+kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic twitter_tweets --describe
+
 ## Run consumer
-kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-third-application
+kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic twitter_tweets --group my-third-application --from-beginning
 
 ## Describe my-third-application group
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-third-application
 ```
 
+
+___
+
+# 4.0 Kafka Producer Configuration
+https://kafka.apache.org/documentation/#producerconfigs
 
 
