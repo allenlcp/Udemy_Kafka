@@ -31,7 +31,7 @@ public class TwitterProducer {
     String token = "";
     String secret = "";
 
-    List<String> terms = Lists.newArrayList("bitcoin", "usa", "politics", "sport", "soccer");
+    List<String> terms = Lists.newArrayList("kafka", "bitcoin", "sport", "soccer", "politics", "brexit", "canada");
 
 
     public TwitterProducer(){}
@@ -77,12 +77,9 @@ public class TwitterProducer {
             }
             if (msg != null){
                 logger.info(msg);
-                producer.send(new ProducerRecord<>("twitter_tweets", null, msg), new Callback() {
-                    @Override
-                    public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                        if (e != null) {
-                            logger.error("Something bad happened", e);
-                        }
+                producer.send(new ProducerRecord<>("twitter_tweets", null, msg), (recordMetadata, e) -> {
+                    if (e != null) {
+                        logger.error("Something bad happened", e);
                     }
                 });
             }

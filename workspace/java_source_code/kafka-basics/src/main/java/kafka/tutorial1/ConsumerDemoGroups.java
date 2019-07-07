@@ -20,7 +20,7 @@ public class ConsumerDemoGroups {
 
         String bootstrapServers = "127.0.0.1:9092";
         String groupId = "my-fifth-application";
-        String topic = "first_topic";
+        String topic = "twitter_tweets";
 
         // create consumer configs
         Properties properties = new Properties();
