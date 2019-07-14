@@ -374,7 +374,7 @@ ___
 # 4.0 Kafka Producer Configuration
 https://kafka.apache.org/documentation/#producerconfigs
 
-## Producers config - acknowledgement deep dive
+## Producer config - acknowledgement deep dive
 acks=all: Leader + replicas acknowledgement (no data loss)
 - must be used in conjunction with min.insync.replicas
 ``` bash
@@ -384,7 +384,7 @@ min.insync.replicas=2 implies that at least 2 brokers that are ISR (including le
 ```
 - than means that if you use **replication.factor=3,mininsync=2,acks=all**, you can only tolerate 1 broker going down, otherwise the producer will receive an exception on send
 
-## Producers config - retries
+## Producer config - retries
 **"retries"** setting 
 - defaults to 0
 - you can increase to a high number, e.g Integer.MAX_VALUE
@@ -393,7 +393,7 @@ min.insync.replicas=2 implies that at least 2 brokers that are ISR (including le
 > Default:5
 > See it to 1 if you need to ensure ordering (may impact throughput)
 
-## Producers config - idempotent
+## Producer config - idempotent
 Idempotent producers are great to guarantee a stable and safe pipeline
 
 They come with:
@@ -406,7 +406,7 @@ They come with:
 producerProps.put("enable.idempotence", true);
 ```
 
-## Summary config - safe producers
+## Summary producer config - safe producer
 Kafka < 0.11
 - acks=all (producer level) 
 > Ensures data is properly replicated before an ack is received
@@ -437,7 +437,7 @@ properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5"
 **Note:** running a "safe producer" might impact throughput and latency, always test for you use case 
 
 
-## Producers config - message compression
+## Producer config - message compression
 - Producer usually send data that is text-based, for example with JSON data
 - In this case, it is important to apply compression to the producer
 - Compression is enabled at the Producer level and doesn't require any configuration change in the Brokers or in the Consumers
@@ -457,7 +457,7 @@ Overall
 > - Consider testing snappy or lz4 for optimal speed / compression ratio
 
 
-## Producers config - linger.ms & batch.size
+## Producer config - linger.ms & batch.size
 By default Kafka tries to send records as soon as possible
 - It will have up to 5 requests in flight, meaning up to 5 messages individually sent at the same time
 - After this, if more messages have to be sent while others are in flight, Kafka is smart and will start batching them while they wait to send them all at once
@@ -484,7 +484,7 @@ properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
 properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024));
 ```
 
-## Producers config - default partitioner and how keys are hashed
+## Producer config - default partitioner and how keys are hashed
 - By default, your keys are hashed using the "murmur2" algorithm
 - It is most likely preferred to not override the behavior of the partitioner, but it is possible to do so (partitioner.class)
 - The formula is:
@@ -494,7 +494,7 @@ targetPartition = Utils.abs(Utils.murmur2(recod.key())) % numPartitions;
 - This means that the same key will go to the same partition (we already know this), and adding partitions to a topic will completely alter the formula
 
 
-## Producers config - max.block.ms & buffer.memory
+## Producer config - max.block.ms & buffer.memory
 - If the producer produces faster than the broker can take, the records will be buffered in memory
 - buffer.memory=33554432 (32MB): the size of the send buffer
 - That buffer will fill up over time and will back down when the throughput to the broker increases
@@ -511,6 +511,16 @@ ___
 
 ## Consumer config - delivery semantics 
 
-**At most once:** -> offsets are committed as soon as the message batch is received.  If the processing goes wrong, the message will be list (it won't be read again).
+**At most once:** -> offsets are committed as soon as the message batch is received.  If the processing goes wrong, the message will be lost (it won't be read again).
 
 <img width="500" alt="at_most_once" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0010.png">
+
+
+**At least once:** -> offsets are committed after the message is processed.  If the processing goes wrong, the message will be read again.  This can result in duplicate processing of messages.  Make sure your processing is idempotent (i.e processing again the message won't impact your systems)
+
+<img width="500" alt="at_most_once" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0011.png">
+
+
+**Exactly once:** -> Can be achieved for Kafka => Kafka workflows using Kafka Streams API.  For Kafka => Sink workflows, use an idempotent consumer.
+
+**Bottom Line:** for most applications you should use **at least once processing** and ensure your transformations / processing are idempotent
