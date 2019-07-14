@@ -426,11 +426,18 @@ Kafka >= 0.11
 > Implies acks=all,retries=MAX_INT,max.in.flight.requests=5 (default)
 > while keeping ordering guarantees and improving performance
 
+``` bash
+## create safe producer
+properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
+properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5"); // kafka > >= 1.1
+```
 
 **Note:** running a "safe producer" might impact throughput and latency, always test for you use case 
 
 
-## Producers - message compression
+## Producers config - message compression
 - Producer usually send data that is text-based, for example with JSON data
 - In this case, it is important to apply compression to the producer
 - Compression is enabled at the Producer level and doesn't require any configuration change in the Brokers or in the Consumers
@@ -450,9 +457,56 @@ Overall
 > - Consider testing snappy or lz4 for optimal speed / compression ratio
 
 
+## Producers config - linger.ms & batch.size
+By default Kafka tries to send records as soon as possible
+- It will have up to 5 requests in flight, meaning up to 5 messages individually sent at the same time
+- After this, if more messages have to be sent while others are in flight, Kafka is smart and will start batching them while they wait to send them all at once
 
+This is smart batching allows Kafka to increase throughput while maintaining very low latency
+
+Batches have higher compression ratio so better efficiency
+
+- **Linger.ms** - Number of milliseconds a producer is willing to wait before sending a batch out. (default 0)
+> - By introducing some lag (for example linger.ms=5), we increase the chances of messages being sent together in a batch
+> - So at the expense of introducing a small delay, we can increase throughput, compression and efficiency of our producer
+> - If a batch is full (see batch.size) before the end of the linger.ms period, it will be sent to Kafka right away!
+
+- **batch.size** - Maximum number of bytes that will be included in a batch. The default is 16KB
+> - Increasing the batch size to something like 32KB or 64KB can help increasing the compression, throughput, and efficiency of requests
+> - Any message that is bigger than the batch size will not be batched
+> - A batch is allocated per partition, so make sure that you don't see it to a number that's too high, otherwise you'll run waste memory!
+> (Note: You can monitor the average batch size metric using Kafka Producer Metrics)
+
+``` bash
+## high throughput producer (at expense of latency and cpu usage)
+properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024));
+```
+
+## Producers config - default partitioner and how keys are hashed
+- By default, your keys are hashed using the "murmur2" algorithm
+- It is most likely preferred to not override the behavior of the partitioner, but it is possible to do so (partitioner.class)
+- The formular is:
+``` bash
+targetPartition = Utils.abs(Utils.murmur2(recod.key())) % numPartitions;
+```
+- This means that the same key will go to the same partition (we already know this), and adding partitions to a topic will completely alter the formula
+
+
+## Producers config - max.block.ms & buffer.memory
+- If the producer produces faster than the broker can take, the records will be buffered in memory
+- buffer.memory=33554432 (32MB): the size of the send buffer
+- That buffer will fill up over time and will back down when the throughput to the broker increases
+- If that buffer is full (all 32 MB), then the.send() method will start to block (won't return right away)
+- **max.block.ms=60000** -> the time the.send() will block until throwing an exception. Exception are basically thrown when
+> - The producer has filled up its buffer
+> - The broker is not accepting any new data
+> - 60 seconds has elapsed
+- If you hit an exception hit that usually means your brokers are down or overloaded as they can't respond to requests
 
 ___
+
 
 
 
