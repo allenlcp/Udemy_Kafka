@@ -44,9 +44,9 @@ public class ElasticSearchConsumer {
         //////////////////////////
 
         // replace with your own credentials
-        String hostname = "udemy-kafka-2817609577.us-east-1.bonsaisearch.net:443"; // localhost or bonsai url
-        String username = "ir3g5urop5"; // needed only for bonsai
-        String password = "ulbwycn0ev"; // needed only for bonsai
+        String hostname = ""; // localhost or bonsai url
+        String username = ""; // needed only for bonsai
+        String password = ""; // needed only for bonsai
 
         // credentials provider help supply username and password
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -63,7 +63,7 @@ public class ElasticSearchConsumer {
     public static KafkaConsumer<String, String> createConsumer(String topic){
 
         String bootstrapServers = "127.0.0.1:9092";
-        String groupId = "kafka-demo-elasticsearch";
+        String groupId = "kafka-demo-elasticsearch_run5";
 
         // create consumer configs
         Properties properties = new Properties();
@@ -73,7 +73,7 @@ public class ElasticSearchConsumer {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"); // disable auto commit of offsets
-        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // disable auto commit of offsets
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "10"); // disable auto commit of offsets
 
         // create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
