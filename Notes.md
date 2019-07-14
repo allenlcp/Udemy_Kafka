@@ -608,4 +608,19 @@ To replay data for a consumer group:
 **Take-away** -> This mechanism is used to detect a data processing issue with the consumer
 
 
+___
 
+# 6.0 Kafka Extended API for developers
+
+## Why Kafka Connect and Streams
+
+Four common kafka use cases:
+
+| Use case  | API  | Extended API  |
+|---|---|--:|
+| Source => Kafka  | Producer API  | Kafka Connect Source  |
+| Kafka => Kafka  | Consumer, Producer API  | Kafka Streams  |
+| Kafka => Sink  | Consumer API  | Kafka Connect Sink  |
+| Kafka => App  | Consumer API  |   |
+
+**Kafka extended API** -> simplify and improve getting data in and out of Kafka
