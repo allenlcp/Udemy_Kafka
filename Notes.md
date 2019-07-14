@@ -374,4 +374,85 @@ ___
 # 4.0 Kafka Producer Configuration
 https://kafka.apache.org/documentation/#producerconfigs
 
+## Producers config - acknowledgement deep dive
+acks=all: Leader + replicas acknowledgement (no data loss)
+- must be used in conjunction with min.insync.replicas
+``` bash
+min.insync.replicas can be set at the broker or topic level (override)
+
+min.insync.replicas=2 implies that at least 2 brokers that are ISR (including leader) must respond that they have the data
+```
+- than means that if you use **replication.factor=3,mininsync=2,acks=all**, you can only tolerate 1 broker going down, otherwise the producer will receive an exception on send
+
+## Producers config - retries
+**"retries"** setting 
+- defaults to 0
+- you can increase to a high number, e.g Integer.MAX_VALUE
+- in case of retries, by default there is a chance that message will be sent out of order (if a batch has failed to be sent)
+- for this, you can set the setting while controls how many produce requests can be made in parallel: **max.inflight.requests.per.connection**
+> Default:5
+> See it to 1 if you need to ensure ordering (may impact throughput)
+
+## Producers config - idempotent
+Idempotent producers are great to guarantee a stable and safe pipeline
+
+They come with:
+- retries: Integer.MAX_VALUE (2^31-1 = 2147483647)
+- max.in.flight.requests=1 (Kafka >= -.11 &< 1.1) or
+- max.in.flight.requests=1 (Kafka >= 1.1 - higher performance) 
+- acks=all
+
+``` bash
+producerProps.put("enable.idempotence", true);
+```
+
+## Summary config - safe producers
+Kafka < 0.11
+- acks=all (producer level) 
+> Ensures data is properly replicated before an ack is received
+
+- min.insync.replicas=2 (broker/topic level)
+> Ensures two brokers in ISR at least have the data after an ack
+
+- retries=MAX_INT (producer level)
+> Ensures transient errors a retrieved indefinitely
+
+- max.in.flight.requests=1 (producer level)
+> Ensures only one request is tried at any time, preventing message re-ordering in case of retries
+
+
+Kafka >= 0.11
+- enable.idempotence=true (producer level) + min.insync.replicas=2 (broker/topic level)
+> Implies acks=all,retries=MAX_INT,max.in.flight.requests=5 (default)
+> while keeping ordering guarantees and improving performance
+
+
+**Note:** running a "safe producer" might impact throughput and latency, always test for you use case 
+
+
+## Producers - message compression
+- Producer usually send data that is text-based, for example with JSON data
+- In this case, it is important to apply compression to the producer
+- Compression is enabled at the Producer level and doesn't require any configuration change in the Brokers or in the Consumers
+- **"compression.type"** can be **'none'** (default), **'gzip'**,**'lz4'**,**'snappy'**
+- Compression is more effective the bigger the batch of message being sent to Kafka!
+- The compressed batch has the following advantage:
+> - Much smaller producer request size (compression ration up to 4x!)
+> - Faster to transfer data over the network => less latency
+> - Better throughput
+> - Better disk utilisation in Kafka (stored messages on disk are smaller)
+
+- Disadvantage (very minor):
+> - Producers must commit some CPU cycles to compression
+> - Consumers must commit some CPU cycles to decompression
+
+Overall 
+> - Consider testing snappy or lz4 for optimal speed / compression ratio
+
+
+
+
+___
+
+
 
