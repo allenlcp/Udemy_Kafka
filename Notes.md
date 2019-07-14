@@ -584,7 +584,7 @@ To replay data for a consumer group:
 
 ## Consumer config - controlling consumer liveliness
 
-<img width="800" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0012.png">
+<img width="700" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0012.png">
 
 ## Consumer config - heartbeat thread
 
@@ -623,4 +623,40 @@ Four common kafka use cases:
 | Kafka => Sink  | Consumer API  | Kafka Connect Sink  |
 | Kafka => App  | Consumer API  |   |
 
-**Kafka extended API** -> simplify and improve getting data in and out of Kafka
+**Kafka extended API** 
+- simplify and improve getting data in and out of Kafka
+- simplify transforming data within Kafka without relying on external libs
+
+
+## Why Kafka Connect
+- Programmers always want to import data from the same sources:
+<img width="500" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0013.png">
+- Programmers always want to store data from the same sinks:
+<img width="500" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0014.png">
+- It is tough to achieve Fault Tolerance, Idempotence, Distribution, Ordering
+- Other programmers may already have done a very good job!
+
+
+## Kafka Connect and Streams - architecture design
+
+<img width="500" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0015.png">
+
+- Kafka connect is on the left hand side
+
+
+## Kafka Connect - High level
+- Source connectors to get data from Common Data Sources
+- Sink connectors to publish that data in Common Data Stores
+- Make it easy for non-experience dev to quickly get their data reliably into Kafka
+- Part of your ETL pipeline
+- Scaling made easy from small pipelines to company-wide pipelines
+- Re-usable code!
+
+https://www.udemy.com/apache-kafka/learn/lecture/11567132#overview
+
+
+## Kafka Streams - introduction
+
+https://www.udemy.com/apache-kafka/learn/lecture/11567142#overview
+
+
