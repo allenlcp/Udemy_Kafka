@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: elasticsearch:6.8.1
+    volumes:
+      - /Volumes/Disk1/Udemy/Kafka/workspace/docker/elasticsearch/volume:/var/tmp/elasticsearch

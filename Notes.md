@@ -487,7 +487,7 @@ properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*102
 ## Producers config - default partitioner and how keys are hashed
 - By default, your keys are hashed using the "murmur2" algorithm
 - It is most likely preferred to not override the behavior of the partitioner, but it is possible to do so (partitioner.class)
-- The formular is:
+- The formula is:
 ``` bash
 targetPartition = Utils.abs(Utils.murmur2(recod.key())) % numPartitions;
 ```
@@ -507,6 +507,10 @@ targetPartition = Utils.abs(Utils.murmur2(recod.key())) % numPartitions;
 
 ___
 
+# 5.0 Kafka Consumer Configuration
 
+## Consumer config - delivery semantics 
 
+**At most once:** -> offsets are committed as soon as the message batch is received.  If the processing goes wrong, the message will be list (it won't be read again).
 
+<img width="500" alt="at_most_once" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0010.png">

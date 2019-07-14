@@ -31,7 +31,7 @@ public class TwitterProducer {
     String token = "";
     String secret = "";
 
-    List<String> terms = Lists.newArrayList("kafka", "bitcoin", "sport", "soccer", "politics", "brexit", "canada");
+    List<String> terms = Lists.newArrayList("kafka", "bitcoin", "sport", "soccer", "politics", "canada");
 
 
     public TwitterProducer(){}

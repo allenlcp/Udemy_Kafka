@@ -6,23 +6,19 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.mapper.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,23 +44,17 @@ public class ElasticSearchConsumer {
         //////////////////////////
 
         // replace with your own credentials
-        String hostname = ""; // localhost or bonsai url
-        String username = ""; // needed only for bonsai
-        String password = ""; // needed only for bonsai
+        String hostname = "udemy-kafka-2817609577.us-east-1.bonsaisearch.net:443"; // localhost or bonsai url
+        String username = "ir3g5urop5"; // needed only for bonsai
+        String password = "ulbwycn0ev"; // needed only for bonsai
 
         // credentials provider help supply username and password
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(username, password));
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
-        RestClientBuilder builder = RestClient.builder(
-                new HttpHost(hostname, 443, "https"))
-                .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                    @Override
-                    public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-                        return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                    }
-                });
+        RestClientBuilder builder = RestClient
+                .builder(new HttpHost(hostname, 443, "https"))
+                .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
 
         RestHighLevelClient client = new RestHighLevelClient(builder);
         return client;
@@ -110,8 +100,7 @@ public class ElasticSearchConsumer {
         KafkaConsumer<String, String> consumer = createConsumer("twitter_tweets");
 
         while(true){
-            ConsumerRecords<String, String> records =
-                    consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
 
             Integer recordCount = records.count();
             logger.info("Received " + recordCount + " records");
