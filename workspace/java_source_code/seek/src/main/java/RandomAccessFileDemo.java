@@ -2,7 +2,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 
 public class RandomAccessFileDemo {
     public static void main(String[] args) {
@@ -128,37 +127,6 @@ public class RandomAccessFileDemo {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void example4(String fileName) {
-        try {
-
-            // create a new RandomAccessFile with filename Example
-            RandomAccessFile randomAccessFile = new RandomAccessFile("/Volumes/Disk1/Udemy/Kafka/workspace/java_source_code/seek/src/main/resources/" + fileName, "r");
-
-            randomAccessFile.seek(10);
-
-            FileChannel fileChannel = randomAccessFile.getChannel();
-
-            // This will print "1000"
-            System.out.println("file pos: " + fileChannel.position());
-
-            randomAccessFile.seek(7);
-
-            // This will print "500"
-            System.out.println("file pos: " + fileChannel.position());
-
-            fileChannel.position(2);
-
-            // This will print "200"
-            System.out.println("file pos: " + randomAccessFile.getFilePointer());
-
-            // close the stream and release resources
-            randomAccessFile.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public static void example5(String fileName) throws Exception {

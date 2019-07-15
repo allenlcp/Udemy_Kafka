@@ -584,7 +584,7 @@ To replay data for a consumer group:
 
 ## Consumer config - controlling consumer liveliness
 
-<img width="700" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0012.png">
+<img width="600" alt="controlling consumer liveliness" src="https://github.com/allenlcp/Udemy_Kafka/blob/master/resources/images/img_0012.png">
 
 ## Consumer config - heartbeat thread
 
