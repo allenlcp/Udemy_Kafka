@@ -4,3 +4,9 @@
 [submodule "kafka-manager"]
 	path = kafka-manager
 	url = git@github.com:yahoo/kafka-manager.git
+[submodule "kt_docker"]
+	path = kt_docker
+	url = git@github.com:Paxa/kt.git
+[submodule "kt_repo"]
+	path = kt_repo
+	url = git@github.com:fgeller/kt.git
